@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">HelloWorldKeyboard</string>
-    <string name="service_label">Hello World KeyboardService</string>
-    <string name="subtype_en_US">Hello World Keyboard</string>
+    <string name="app_name">Onekey</string>
+    <string name="service_label">Onekey</string>
+    <string name="language">Morse</string>
+    <string name="unacceptable_error_message">%1$s %2$dms, should be %3$dms</string>
+    <string name="nonexistent_letter_message">%1$s is not a character</string>
 </resources>

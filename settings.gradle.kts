@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HelloWorldKeyboard"
+rootProject.name = "Onekey"
 include(":app")

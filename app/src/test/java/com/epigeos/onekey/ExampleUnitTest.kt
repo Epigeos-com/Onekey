@@ -1,4 +1,4 @@
-package com.example.helloworldkeyboard
+package com.epigeos.onekey
 
 import org.junit.Test
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        android:defaultValue="15"
+        android:key="wpm"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Words per minute" />
+    <EditTextPreference
+        android:defaultValue="200"
+        android:key="swipe_distance"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Swipe distance" />
+    <EditTextPreference
+        android:defaultValue="40"
+        android:key="acceptable_error"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Acceptable error" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="input_despite_error"
+        android:title="Input despite error" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="check_error_for_dotdashes"
+        android:title="Check error for dotdashes" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="check_error_for_dotdash_space"
+        android:title="Check error for dotdash space" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="check_error_for_letter_space"
+        android:title="Check error for letter space" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="check_error_for_word_space"
+        android:title="Check error for word space" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="use_automatic_letter_space"
+        android:title="Use automatic letter space" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="use_automatic_word_space"
+        android:title="Use automatic word space" />
+    <EditTextPreference
+        android:key="try_it"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Try it" />
+</PreferenceScreen>
