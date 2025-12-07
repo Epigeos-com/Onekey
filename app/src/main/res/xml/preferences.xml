@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditTextPreference
+        android:defaultValue="348"
+        android:key="button_height"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Button height" />
+    <EditTextPreference
         android:defaultValue="15"
         android:key="wpm"
         android:selectAllOnFocus="true"

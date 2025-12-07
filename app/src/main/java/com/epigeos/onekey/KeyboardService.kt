@@ -27,6 +27,7 @@ class KeyboardService : InputMethodService() {
     fun getSettings(){
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
+        button?.height = preferences.getString("button_height", "348")?.toInt()!!
         unitMs = 60000/(50 * (preferences.getString("wpm", "15")?.toInt()!!))
         swipeDistance = preferences.getString("swipe_distance", "200")?.toFloat()!!
         acceptableError = preferences.getString("acceptable_error", "40")?.toInt()!!
@@ -48,6 +49,10 @@ class KeyboardService : InputMethodService() {
     var checkErrorForWordSpace = false
     var useAutomaticLetterSpace = true
     var useAutomaticWordSpace = false
+
+    var button: Button? = null
+    var capsStatus: TextView? = null
+    var errorMessage: TextView? = null
     override fun onStartInputView(attribute: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(attribute, restarting)
         getSettings()
@@ -56,9 +61,10 @@ class KeyboardService : InputMethodService() {
 
         val inflater = layoutInflater
         val inputView = inflater.inflate(R.layout.keyboard_layout, null)
-        val button = inputView.findViewById<Button>(R.id.button)
-        val capsStatus = inputView.findViewById<TextView>(R.id.capsStatus)
-        val errorMessage = inputView.findViewById<TextView>(R.id.errorMessage)
+        button = inputView.findViewById<Button>(R.id.button)
+        capsStatus = inputView.findViewById<TextView>(R.id.capsStatus)
+        errorMessage = inputView.findViewById<TextView>(R.id.errorMessage)
+
 
         val timeSource = TimeSource.Monotonic
         var mark: TimeSource.Monotonic.ValueTimeMark? = null
@@ -71,7 +77,7 @@ class KeyboardService : InputMethodService() {
         var dy = 0f
 
 //        @SuppressLint("ClickableViewAccessibility")
-        button.setOnTouchListener(object : OnTouchListener {
+        button?.setOnTouchListener(object : OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 if (event?.action == MotionEvent.ACTION_MOVE){
                     dx = event.x - touchStartX
@@ -100,13 +106,13 @@ class KeyboardService : InputMethodService() {
                     val distanceFromLetterSpace = abs((unitMs * 3) - ms)
                     val distanceFromWordSpace = abs((unitMs * 7) - ms)
                     if (distanceFromDotdashSpace < distanceFromLetterSpace) { // Dotdash
-                        if (checkErrorForDotdashSpace && distanceFromDotdashSpace > acceptableError) saveError(getString(R.string.unacceptable_error_message, "Dotdash space", ms, unitMs), errorMessage)
+                        if (checkErrorForDotdashSpace && distanceFromDotdashSpace > acceptableError) saveError(getString(R.string.unacceptable_error_message, "Dotdash space", ms, unitMs))
                     } else if (distanceFromWordSpace < distanceFromLetterSpace && useAutomaticWordSpace) { // Word
-                        inputLetters(' ', capsStatus)
+                        inputLetters(' ')
                         Log.d("debug", "inserted automatic word space")
-                        if (checkErrorForWordSpace && distanceFromWordSpace > acceptableError) saveError(getString(R.string.unacceptable_error_message, "Word space", ms, unitMs*7), errorMessage)
+                        if (checkErrorForWordSpace && distanceFromWordSpace > acceptableError) saveError(getString(R.string.unacceptable_error_message, "Word space", ms, unitMs*7))
                     } else if (useAutomaticLetterSpace) { // Letter
-                        if (checkErrorForLetterSpace && distanceFromLetterSpace > acceptableError) saveError(getString(R.string.unacceptable_error_message, "Letter space", ms, unitMs * 3), errorMessage)
+                        if (checkErrorForLetterSpace && distanceFromLetterSpace > acceptableError) saveError(getString(R.string.unacceptable_error_message, "Letter space", ms, unitMs * 3))
                     }
 
                     return true
@@ -118,25 +124,25 @@ class KeyboardService : InputMethodService() {
                     if (isSwipe) {
                         val angle = atan2(dy, dx)
                         if (angle > -PI/8 && angle <= PI/8){ // Right
-                            if (button.text == ""){
-                                inputLetters(' ', capsStatus)
+                            if (button?.text == ""){
+                                inputLetters(' ')
                             }else{
-                                inputDotdashes(' ', button, capsStatus, errorMessage)
+                                inputDotdashes(' ')
                             }
                         } else if (angle > PI/8 && angle <= 3*PI/8){ // Top-right
                             isCapsLocked = !isCapsLocked
-                            if (isCapsLocked) capsStatus.text = "CapsLock" else if (isNextLetterUppercase) capsStatus.text = "Caps" else capsStatus.text = ""
+                            if (isCapsLocked) capsStatus?.text = "CapsLock" else if (isNextLetterUppercase) capsStatus?.text = "Caps" else capsStatus?.text = ""
                         } else if (angle > 3*PI/8 && angle <= 5*PI/8){ // Top
                             isNextLetterUppercase = !isNextLetterUppercase
-                            if (isCapsLocked) capsStatus.text = "CapsLock" else if (isNextLetterUppercase) capsStatus.text = "Caps" else capsStatus.text = ""
+                            if (isCapsLocked) capsStatus?.text = "CapsLock" else if (isNextLetterUppercase) capsStatus?.text = "Caps" else capsStatus?.text = ""
                         } else if (angle > 5*PI/8 && angle <= 7*PI/8){ // Top-left
                             backspaceWord()
                         } else if (angle > 7*PI/8 || angle <= -7*PI/8){ // Left
                             backspaceLetter()
                         } else if (angle > -7*PI/8 && angle <= -5*PI/8){ // Bottom-left
-                            inputDotdashes('b', button, capsStatus, errorMessage)
+                            inputDotdashes('b')
                         } else if (angle > -5*PI/8 && angle <= -3*PI/8){ // Bottom
-                            inputLetters('\n', capsStatus)
+                            inputLetters('\n')
                         } else if (angle > -3*PI/8 && angle <= -PI/8){ // Bottom-right
                         }
                     }
@@ -145,17 +151,17 @@ class KeyboardService : InputMethodService() {
                         val distanceFromDash = abs((unitMs * 3) - ms)
                         val isBeyondAcceptableError = checkErrorForDotdashes && min(distanceFromDot, distanceFromDash) > acceptableError;
                         if (distanceFromDot < distanceFromDash) {
-                            if (isBeyondAcceptableError) saveError(getString(R.string.unacceptable_error_message, "Dot", ms, unitMs), errorMessage)
-                            if (!isBeyondAcceptableError || inputDespiteError) inputDotdashes('.', button, capsStatus, errorMessage)
+                            if (isBeyondAcceptableError) saveError(getString(R.string.unacceptable_error_message, "Dot", ms, unitMs))
+                            if (!isBeyondAcceptableError || inputDespiteError) inputDotdashes('.')
                         } else {
-                            if (isBeyondAcceptableError) saveError(getString(R.string.unacceptable_error_message, "Dash", ms, unitMs*3), errorMessage)
-                            if (!isBeyondAcceptableError || inputDespiteError) inputDotdashes('-', button, capsStatus, errorMessage)
+                            if (isBeyondAcceptableError) saveError(getString(R.string.unacceptable_error_message, "Dash", ms, unitMs*3))
+                            if (!isBeyondAcceptableError || inputDespiteError) inputDotdashes('-')
                         }
 
                         if (useAutomaticLetterSpace){
                             val currentDotdashesTyped = dotdashesTyped
-                            button.postDelayed({
-                                if (currentDotdashesTyped == dotdashesTyped) inputDotdashes(' ', button, capsStatus, errorMessage) // No new dotdashes started being entered since
+                            button?.postDelayed({
+                                if (currentDotdashesTyped == dotdashesTyped) inputDotdashes(' ') // No new dotdashes started being entered since
                             }, (unitMs * 3).toLong())
                         }
                     }
@@ -170,33 +176,33 @@ class KeyboardService : InputMethodService() {
         return inputView
     }
 
-    private fun saveError(message: String, errorMessage: TextView){
+    private fun saveError(message: String){
         Log.d("showError", message)
-        errorMessage.text = message
+        errorMessage?.text = message
     }
-    private fun inputDotdashes(char: Char, button: Button, capsStatus: TextView, errorMessage: TextView){
+    private fun inputDotdashes(char: Char){
         if (char == ' '){
-            val eqLetter = dictionary[button.text]
+            val eqLetter = dictionary[button?.text]
             if (eqLetter == null){
-                saveError(getString(R.string.nonexistent_letter_message, button.text), errorMessage)
+                saveError(getString(R.string.nonexistent_letter_message, button?.text))
                 wasLastLetterWrong = true
             }else{
-                inputLetters(eqLetter, capsStatus)
+                inputLetters(eqLetter)
             }
-            button.text = ""
+            button?.text = ""
         }else if (char == 'b') {
-            button.text = button.text.dropLast(1)
+            button?.text = button?.text?.dropLast(1)
         }else{
             @SuppressLint("SetTextI18n")
-            button.text = "${button.text}$char"
+            button?.text = "${button?.text}$char"
         }
     }
-    private fun inputLetters(char: Char, capsStatus: TextView) {
+    private fun inputLetters(char: Char) {
         val inputConnection = currentInputConnection
         if (isNextLetterUppercase || isCapsLocked){
             inputConnection?.commitText(char.uppercase(), 1)
             isNextLetterUppercase = false
-            if (isCapsLocked) capsStatus.text = "CapsLock" else if (isNextLetterUppercase) capsStatus.text = "Caps" else capsStatus.text = ""
+            if (isCapsLocked) capsStatus?.text = "CapsLock" else if (isNextLetterUppercase) capsStatus?.text = "Caps" else capsStatus?.text = ""
         }
         else inputConnection?.commitText(char.toString(), 1)
     }

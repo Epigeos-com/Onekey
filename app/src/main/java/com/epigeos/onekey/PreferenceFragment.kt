@@ -12,8 +12,9 @@ class PreferenceFragment : PreferenceFragmentCompat() {
         val wpm = preferenceManager.findPreference<EditTextPreference>("wpm")
         val swipeDistance = preferenceManager.findPreference<EditTextPreference>("swipe_distance")
         val acceptableError = preferenceManager.findPreference<EditTextPreference>("acceptable_error")
+        val buttonHeight = preferenceManager.findPreference<EditTextPreference>("button_height")
 
-        val numericInputs = arrayOf(wpm, swipeDistance, acceptableError)
+        val numericInputs = arrayOf(wpm, swipeDistance, acceptableError, buttonHeight)
         numericInputs.forEach { input ->
             input?.summary = input?.text
             input?.setOnPreferenceChangeListener { preference, newValue ->
