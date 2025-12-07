@@ -53,4 +53,7 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="Try it" />
+    <PreferenceCategory android:title="@string/swipe_gestures_info">
+
+    </PreferenceCategory>
 </PreferenceScreen>

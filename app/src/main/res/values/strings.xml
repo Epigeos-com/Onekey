@@ -4,4 +4,12 @@
     <string name="language">Morse</string>
     <string name="unacceptable_error_message">%1$s %2$dms, should be %3$dms</string>
     <string name="nonexistent_letter_message">%1$s is not a character</string>
+    <string name="swipe_gestures_info">Swipe gestures:\n
+- Down-left: Backspace dotdash\n
+- Left: Backspace letter\n
+- Up-left: Backspace word\n
+- Right: Space\n
+- Up-right: CapsLock\n
+- Up: Caps\n
+- Down: Newline</string>
 </resources>
