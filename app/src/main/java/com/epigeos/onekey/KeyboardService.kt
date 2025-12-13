@@ -144,6 +144,7 @@ class KeyboardService : InputMethodService() {
                         } else if (angle > -5*PI/8 && angle <= -3*PI/8){ // Bottom
                             inputLetters('\n')
                         } else if (angle > -3*PI/8 && angle <= -PI/8){ // Bottom-right
+                            enter()
                         }
                     }
                     else{
@@ -226,5 +227,9 @@ class KeyboardService : InputMethodService() {
             if (spaceIndex == null) inputConnection?.deleteSurroundingText(64, 0)
             else inputConnection.deleteSurroundingText(text.length - spaceIndex, 0)
         }
+    }
+    private fun enter(){
+        val inputConnection = currentInputConnection
+        inputConnection.performEditorAction(EditorInfo.IME_ACTION_UNSPECIFIED)
     }
 }

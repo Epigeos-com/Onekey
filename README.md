@@ -8,6 +8,7 @@ Swipe gestures:
 - Down-left: Backspace dotdash
 - Left: Backspace letter
 - Up-left: Backspace word
+- Down-right: Enter
 - Right: Space
 - Up-right: CapsLock
 - Up: Caps
